@@ -1,0 +1,9 @@
+/target/
+*.rs.bk
+.slack/
+credentials.json
+*.log
+.env
+.env.*
+*.pem
+*.key

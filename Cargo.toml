@@ -1,9 +1,17 @@
 [package]
-name = "slack-cli"
+name = "cli-slack"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.85"
 description = "Slack Web API CLI"
+license = "MIT"
+repository = "https://github.com/Sankalpcreat/Slack-Cli"
+homepage = "https://github.com/Sankalpcreat/Slack-Cli"
+documentation = "https://github.com/Sankalpcreat/Slack-Cli#readme"
+
+[[bin]]
+name = "slack-cli"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.5", features = ["derive"] }

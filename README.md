@@ -39,10 +39,10 @@ cargo build --release
 sudo cp target/release/slack-cli /usr/local/bin/
 ```
 
-### Cargo install (after publishing to crates.io)
+### Cargo install
 
 ```bash
-cargo install slack-cli
+cargo install cli-slack
 ```
 
 **Requirements:** Rust 1.85+ ([rustup.rs](https://rustup.rs))
@@ -138,7 +138,8 @@ slack-cli/
 ├── scripts/
 │   └── scope-setup.sh  # Add scopes to existing app (advanced)
 ├── install.sh          # Install script
-├── slack-cli-banner.png
+├── assets/
+│   └── slack-cli-banner.png
 └── README.md
 ```
 

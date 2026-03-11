@@ -29,7 +29,7 @@ For agents: set `SLACK_TOKEN=xoxp-your-token` in the environment. The CLI reads 
 | **AGENTS.md** | This file. Start here. |
 | **README.md** | User-facing docs: installation, auth flows, command reference |
 | **docs/SCOPES.md** | All Slack scopes by free / paid / enterprise workspace |
-| **Cargo.toml** | Rust package: name `slack-cli`, deps (clap, reqwest, serde, anyhow) |
+| **Cargo.toml** | Rust package: name `cli-slack` (crates.io), binary `slack-cli`, deps (clap, reqwest, serde, anyhow) |
 | **install.sh** | One-liner install: clones repo, builds, copies to `/usr/local/bin` |
 | **scripts/scope-setup.sh** | Add scopes to existing app (needs `SLACK_CONFIG_TOKEN`, `SLACK_APP_ID`) |
 | **src/main.rs** | Entry point: routes to Web API CLI or falls back to `slack` binary |

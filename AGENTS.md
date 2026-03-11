@@ -107,16 +107,16 @@ curl -fsSL https://raw.githubusercontent.com/Sankalpcreat/Slack-Cli/main/install
 
 ## Authentication — Two Flows
 
-### Flow A: Manual
-1. Create app at [api.slack.com/apps](https://api.slack.com/apps)
-2. Add scopes, Install to Workspace
-3. Copy User OAuth Token (`xoxp-...`)
-4. `slack-cli auth login --token xoxp-...`
-
-### Flow B: CLI Creates App
+### Flow A: CLI Creates App
 1. Get refresh token from api.slack.com/apps → Your App Configuration Tokens → Generate Token
 2. `slack-cli apps create --name "My CLI" --refresh-token xoxe-...`
 3. Add redirect URL `https://localhost` in Slack UI, Install, copy token
+4. `slack-cli auth login --token xoxp-...`
+
+### Flow B: Manual
+1. Create app at [api.slack.com/apps](https://api.slack.com/apps)
+2. Add scopes, Install to Workspace
+3. Copy User OAuth Token (`xoxp-...`)
 4. `slack-cli auth login --token xoxp-...`
 
 **Scopes:** See `docs/SCOPES.md`. Override with `--scopes "scope1,scope2"` on `apps create`.

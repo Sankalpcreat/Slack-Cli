@@ -51,38 +51,11 @@ cargo install slack-cli
 
 ## Authentication
 
-Two ways to get a token: **manual** (step-by-step in the UI) or **create** (CLI creates the app for you).
+Two ways to get a token: **create** (CLI creates the app for you) or **manual** (step-by-step in the UI).
 
 ---
 
-### Flow A: Manual (step-by-step)
-
-1. **Create app:** [api.slack.com/apps](https://api.slack.com/apps) → **Create New App** → **From scratch** → name it, select workspace
-2. **Add scopes:** **OAuth & Permissions** → **User Token Scopes** → add what you need (see table below)
-3. **Install:** **Install to Workspace** → approve
-4. **Copy token:** User OAuth Token (`xoxp-...`) on the same page
-5. **Login:**
-
-```bash
-slack-cli auth login --token xoxp-YOUR-TOKEN
-```
-
-No redirect URL. Token is copied from the web UI.
-
-| Scope | Use |
-|-------|-----|
-| `channels:read`, `channels:write` | List, join, post to channels |
-| `chat:write` | Post messages |
-| `users:read` | List users |
-| `files:read`, `files:write` | Upload, download files |
-| `groups:read`, `groups:write` | Private channels |
-| `links:write` | Custom link unfurling |
-
-See [docs/SCOPES.md](docs/SCOPES.md) for full list (free / paid / enterprise).
-
----
-
-### Flow B: Create app (CLI creates it)
+### Flow A: Create app (CLI creates it)
 
 The CLI creates the app for you. You only need a **refresh token** (one-time setup) and to add the redirect URL in the Slack UI.
 
@@ -108,6 +81,33 @@ slack-cli apps create --name "My CLI" --refresh-token xoxe-... --scopes "channel
 ```
 
 Full scope reference: [docs/SCOPES.md](docs/SCOPES.md) (free / paid / enterprise).
+
+---
+
+### Flow B: Manual (step-by-step)
+
+1. **Create app:** [api.slack.com/apps](https://api.slack.com/apps) → **Create New App** → **From scratch** → name it, select workspace
+2. **Add scopes:** **OAuth & Permissions** → **User Token Scopes** → add what you need (see table below)
+3. **Install:** **Install to Workspace** → approve
+4. **Copy token:** User OAuth Token (`xoxp-...`) on the same page
+5. **Login:**
+
+```bash
+slack-cli auth login --token xoxp-YOUR-TOKEN
+```
+
+No redirect URL. Token is copied from the web UI.
+
+| Scope | Use |
+|-------|-----|
+| `channels:read`, `channels:write` | List, join, post to channels |
+| `chat:write` | Post messages |
+| `users:read` | List users |
+| `files:read`, `files:write` | Upload, download files |
+| `groups:read`, `groups:write` | Private channels |
+| `links:write` | Custom link unfurling |
+
+See [docs/SCOPES.md](docs/SCOPES.md) for full list (free / paid / enterprise).
 
 ---
 
@@ -450,7 +450,7 @@ slack-cli reactions add C123 1234567890.123456 thumbsup
 
 | Command | Use | When |
 |---------|-----|------|
-| `apps create --name N [--refresh-token T \| --config-token T] [--scopes S]` | Create app from manifest | Flow B |
+| `apps create --name N [--refresh-token T \| --config-token T] [--scopes S]` | Create app from manifest | Flow A |
 | `apps token rotate --refresh-token T` | Get new config token | Token expired |
 | `apps manifest export <app_id>` | Export manifest | Get app config |
 | `apps manifest update <app_id> <manifest_file>` | Update manifest | Update app |

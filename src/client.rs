@@ -6,6 +6,14 @@ use std::collections::HashMap;
 const BASE_URL: &str = "https://slack.com/api";
 
 pub fn call(token: &str, method: &str, params: Option<&HashMap<String, String>>) -> Result<Vec<u8>> {
+    call_opt(Some(token), method, params)
+}
+
+pub fn call_opt(
+    token: Option<&str>,
+    method: &str,
+    params: Option<&HashMap<String, String>>,
+) -> Result<Vec<u8>> {
     let url = format!("{}/{}", BASE_URL, method);
     let client = Client::new();
     let mut form = Vec::new();
@@ -14,12 +22,11 @@ pub fn call(token: &str, method: &str, params: Option<&HashMap<String, String>>)
             form.push((k.clone(), v.clone()));
         }
     }
-    let resp = client
-        .post(&url)
-        .header("Authorization", format!("Bearer {}", token))
-        .form(&form)
-        .send()
-        .context("request failed")?;
+    let mut req = client.post(&url);
+    if let Some(t) = token {
+        req = req.header("Authorization", format!("Bearer {}", t));
+    }
+    let resp = req.form(&form).send().context("request failed")?;
     let body = resp.bytes().context("read body")?;
     let dec: Value = serde_json::from_slice(&body).context("parse json")?;
     if !dec.get("ok").and_then(|v| v.as_bool()).unwrap_or(false) {

@@ -51,15 +51,23 @@ cargo install slack-cli
 
 ## Authentication
 
-### 1. Create a Slack app
+Two ways to get a token: **manual** (step-by-step in the UI) or **create** (CLI creates the app for you).
 
-1. Go to [api.slack.com/apps](https://api.slack.com/apps)
-2. **Create New App** → **From scratch**
-3. Name it (e.g. "My CLI") and select your workspace
+---
 
-### 2. Add scopes
+### Flow A: Manual (step-by-step)
 
-**OAuth & Permissions** → **User Token Scopes** → add:
+1. **Create app:** [api.slack.com/apps](https://api.slack.com/apps) → **Create New App** → **From scratch** → name it, select workspace
+2. **Add scopes:** **OAuth & Permissions** → **User Token Scopes** → add what you need (see table below)
+3. **Install:** **Install to Workspace** → approve
+4. **Copy token:** User OAuth Token (`xoxp-...`) on the same page
+5. **Login:**
+
+```bash
+slack-cli auth login --token xoxp-YOUR-TOKEN
+```
+
+No redirect URL. Token is copied from the web UI.
 
 | Scope | Use |
 |-------|-----|
@@ -70,29 +78,50 @@ cargo install slack-cli
 | `groups:read`, `groups:write` | Private channels |
 | `links:write` | Custom link unfurling |
 
-See [Slack scopes](https://api.slack.com/scopes) for full list.
+See [docs/SCOPES.md](docs/SCOPES.md) for full list (free / paid / enterprise).
 
-### 3. Install and get token
+---
 
-1. **Install to Workspace** → approve
-2. Copy **User OAuth Token** (starts with `xoxp-`) from the same page
+### Flow B: Create app (CLI creates it)
 
-No redirect URL. You copy the token from the web UI.
+The CLI creates the app for you. You only need a **refresh token** (one-time setup) and to add the redirect URL in the Slack UI.
 
-### 4. Login
+1. **Get refresh token (one-time):** [api.slack.com/apps](https://api.slack.com/apps) → scroll below app list → **Your App Configuration Tokens** → **Generate Token**. Copy the **refresh token** (config token expires in 12h; refresh token is for future runs).
+2. **Create app:**
+
+```bash
+slack-cli apps create --name "My CLI" --refresh-token xoxe-your-refresh-token
+```
+
+3. **Add redirect URL:** Browser opens automatically → **OAuth & Permissions** → **Redirect URLs** → add `https://localhost`
+4. **Install:** Click **Install to Workspace** → approve → copy **User OAuth Token** (`xoxp-...`)
+5. **Login:**
 
 ```bash
 slack-cli auth login --token xoxp-YOUR-TOKEN
 ```
 
-Token saved to `~/.slack/credentials.json`.
+**Scopes:** Default is a limited set: `channels:read`, `channels:write`, `chat:write`, `users:read`, `files:read`, `files:write`, `groups:read`, `groups:write`, `links:write`. Override with `--scopes`:
+
+```bash
+slack-cli apps create --name "My CLI" --refresh-token xoxe-... --scopes "channels:read,chat:write,users:read,search:read"
+```
+
+Full scope reference: [docs/SCOPES.md](docs/SCOPES.md) (free / paid / enterprise).
 
 ---
 
 ## Repository Structure
 
+**For LLMs/agents:** Read [AGENTS.md](AGENTS.md) first — repo map, install, auth, commands.
+
+**Scopes:** [docs/SCOPES.md](docs/SCOPES.md) — all scopes by free / paid / enterprise workspace.
+
 ```
 slack-cli/
+├── AGENTS.md           # Agent/LLM onboarding (read first)
+├── docs/
+│   └── SCOPES.md       # Scope reference (free/paid/enterprise)
 ├── Cargo.toml          # Rust package manifest
 ├── src/
 │   ├── main.rs         # Entry point
@@ -107,7 +136,7 @@ slack-cli/
 │       ├── users.rs
 │       └── ...
 ├── scripts/
-│   └── scope-setup.sh  # Add scopes to app (needs config token)
+│   └── scope-setup.sh  # Add scopes to existing app (advanced)
 ├── install.sh          # Install script
 ├── slack-cli-banner.png
 └── README.md
@@ -421,6 +450,8 @@ slack-cli reactions add C123 1234567890.123456 thumbsup
 
 | Command | Use | When |
 |---------|-----|------|
+| `apps create --name N [--refresh-token T \| --config-token T] [--scopes S]` | Create app from manifest | Flow B |
+| `apps token rotate --refresh-token T` | Get new config token | Token expired |
 | `apps manifest export <app_id>` | Export manifest | Get app config |
 | `apps manifest update <app_id> <manifest_file>` | Update manifest | Update app |
 | `apps scopes add <app_id> [--user S] [--bot S]` | Add scopes | Add to app |
@@ -443,18 +474,6 @@ curl -fsSL https://raw.githubusercontent.com/Sankalpcreat/Slack-Cli/main/install
 
 **Env vars:** `SLACK_CLI_REPO`, `SLACK_CLI_INSTALL_DIR`
 
-### scripts/scope-setup.sh
-
-Add scopes to your Slack app. Requires config token and app ID.
-
-```bash
-export SLACK_CONFIG_TOKEN=xoxe-your-config-token
-export SLACK_APP_ID=A01234567
-./scripts/scope-setup.sh
-```
-
-Opens OAuth page; after install, run `slack-cli auth login --token xoxp-...`.
-
 ---
 
 ## Environment Variables
@@ -462,14 +481,16 @@ Opens OAuth page; after install, run `slack-cli auth login --token xoxp-...`.
 | Variable | Use |
 |----------|-----|
 | `SLACK_TOKEN` | Token (overrides credentials file). Use for agents, CI, Docker. |
-| `SLACK_CONFIG_TOKEN` | Config token (xoxe-) for `apps` commands |
-| `SLACK_APP_ID` | App ID for scope-setup script |
+| `SLACK_CONFIG_TOKEN` | Config token (xoxe-) for `apps manifest` / `apps scopes` |
+| `SLACK_REFRESH_TOKEN` | Refresh token for `apps create` |
 | `SLACK_CLI_REPO` | Repo URL for install script |
 | `SLACK_CLI_INSTALL_DIR` | Install path for install script |
 
 ---
 
 ## LLM / Agent Integration
+
+**Start here:** [AGENTS.md](AGENTS.md) — full repo map, install, auth, and command reference for agents.
 
 ### Cursor / Claude Code / Codex
 

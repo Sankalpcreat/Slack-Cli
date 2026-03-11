@@ -34,7 +34,7 @@ curl -fsSL https://raw.githubusercontent.com/Sankalpcreat/Slack-Cli/main/install
 ### From source
 
 ```bash
-git clone https://github.com/Sankalpcreat/Slack-Cli.git && cd slack-cli
+git clone https://github.com/Sankalpcreat/Slack-Cli.git && cd Slack-Cli
 cargo build --release
 sudo cp target/release/slack-cli /usr/local/bin/
 ```

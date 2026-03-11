@@ -1,6 +1,6 @@
 # slack-cli
 
-![Slack CLI](assets/slack-cli-banner.png)
+<img src="assets/slack-cli-banner.png" width="400" alt="Slack CLI" />
 
 > **Disclaimer:** This is not an official Slack project. Independently built as a personal side project using the public [Slack API](https://api.slack.com/), and open sourced for the community. Not affiliated with or endorsed by Slack. Slack and the Slack logo are trademarks of Slack Technologies, LLC.
 
